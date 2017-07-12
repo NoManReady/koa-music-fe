@@ -5,6 +5,19 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+import 'normalize.css'
+import 'animate.css'
+import './assets/fonts/style.css'
+
+import VueTouch from 'vue-touch'
+Vue.use(VueTouch, { name: 'v-touch' })
+import VueLazyLoad from 'vue-lazyload'
+//默认图片 
+import lazy_img from './assets/loading.gif'
+Vue.use(VueLazyLoad, {
+  loading: lazy_img
+})
+
 import filters from './filters'
 import directives from './directives'
 import plugins from './plugins'

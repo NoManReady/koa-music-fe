@@ -1,15 +1,18 @@
 var path = require('path')
+var webpack = require('webpack')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var vueLoaderOptions = require('./vue-loader-options')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    vendor: ['vue', 'vuex', 'axios', 'vue-router']
   },
   output: {
     path: config.build.assetsRoot,
@@ -54,5 +57,12 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+      },
+      vue: vueLoaderOptions
+    })
+  ]
 }
