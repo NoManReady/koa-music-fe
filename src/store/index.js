@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 
 import status from './modules/status'
+import music from './modules/music'
 import * as types from './constant'
 
 Vue.use(Vuex)
@@ -19,7 +20,8 @@ const mutations = {
 }
 
 const modules = {
-  status
+  status,
+  music
 }
 
 const getters = {

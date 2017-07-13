@@ -22,7 +22,7 @@ import filters from './filters'
 import directives from './directives'
 import plugins from './plugins'
 Vue.config.productionTip = false
-
+Vue.use(plugins, {})
 // 注册过滤器
 for (let filter in filters) {
   Vue.filter(filter, filters[filter])

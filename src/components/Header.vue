@@ -5,7 +5,7 @@
     </div>
     <div class="header--menu">
       <div class="header--menu--item">
-        <router-link to="/home/popular">推荐</router-link>
+        <router-link to="/home">推荐</router-link>
       </div>
       <div class="header--menu--item">
         <router-link to="/collection">排行榜</router-link>

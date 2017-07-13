@@ -1,8 +1,10 @@
 import * as types from '../constant'
 const state = {
   header: true,
-  loading: true,
-  playbar: true
+  loading: false,
+  playbar: true,
+  listenListStatus: false,
+  partLoading: false
 }
 const actions = {
   setLoading({ commit }, loading = false) {
@@ -13,6 +15,9 @@ const actions = {
   },
   setPlaybar({ commit }, playbar = false) {
     commit(types.APP_PLAYBAR, playbar)
+  },
+  setListenListStatus({ commit }, listenListStatus = false) {
+    commit(types.LISTEN_LIST_STATUS, listenListStatus)
   }
 }
 const mutations = {
@@ -24,6 +29,12 @@ const mutations = {
   },
   [types.APP_PLAYBAR](state, playbar) {
     state.playbar = playbar
+  },
+  [types.LISTEN_LIST_STATUS](state, status) {
+    state.listenListStatus = status
+  },
+  [types.PART_LOADING](state, status) {
+    state.partLoading = status
   }
 }
 const getters = {
@@ -35,6 +46,12 @@ const getters = {
   },
   playbar(state) {
     return state.playbar
+  },
+  listenListStatus(state) {
+    return state.listenListStatus
+  },
+  partLoading(state) {
+    return state.partLoading
   }
 }
 

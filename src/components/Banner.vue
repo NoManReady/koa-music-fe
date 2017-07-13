@@ -2,8 +2,8 @@
   <div class="banner">
     <ul class="banner-slide">
       <li v-for="(item,index) in images" :class="[move[index]]" :key="item">
-        <v-touch @swipeleft="nextPic" @swiperight="prePic">
-          <img v-lazy="item.src" @click="target(index)">
+        <v-touch @swipeleft="nextPic" @swiperight="prePic" @tap="onTap(item.url)">
+          <img v-lazy="item.pic" @click="target(index)">
         </v-touch>
       </li>
     </ul>
@@ -72,6 +72,11 @@ export default {
       this.move[pos + 1 < num ? pos + 1 : 0] = 'right'
       this.move[pos - 1 === -1 ? num - 1 : pos - 1] = 'left'
       this.move = this.move.concat()
+    },
+    onTap(url) {
+      if (url) {
+        window.open('_blank', url)
+      }
     }
   }
 }
