@@ -2,15 +2,15 @@
   <div class="home">
     <s-banner :images="banners" v-if="banners.length"></s-banner>
     <s-home-nav></s-home-nav>
-    <router-view></router-view>
-    <s-loading :loading="partLoading"></s-loading>
+    <transition enter-active-class="lightSpeedIn" leave-active-class="lightSpeedOut" mode="out-in">
+      <router-view class="home--container animated"></router-view>
+    </transition>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import Banner from '@/components/Banner'
 import HomeNav from '@/components/HomeNav'
-import Loading from '@/components/Loading'
 import * as api from '@/api'
 export default {
   name: 'home',
@@ -21,30 +21,39 @@ export default {
   },
   components: {
     's-banner': Banner,
-    's-home-nav': HomeNav,
-    's-loading': Loading
+    's-home-nav': HomeNav
   },
   async beforeRouteEnter(to, from, next) {
-    const _result = await api.getBanner()
+    const _banners = JSON.parse(localStorage.getItem('banners') || null)
+    const _result = _banners || (await api.getBanner()).banners
     next(vm => {
-      vm.banners = Object.freeze(_result.banners)
+      vm.banners = Object.freeze(_result)
+      localStorage.setItem('banners', JSON.stringify(vm.banners))
     })
   },
   mounted() {
-    let audioDOM = document.querySelector('audio')
-    audioDOM.addEventListener('loadedmetadata', () => {
-      this.setPlaying(true)
-      this.setMusicTime(audioDOM.duration)
-    })
+    console.log('home')
   },
   computed: {
-    ...mapGetters(['partLoading'])
+    ...mapGetters(['loading'])
   },
   methods: {
-    ...mapActions(['setPlaying', 'setMusicTime'])
+    ...mapActions([])
   }
 }
 </script>
 <style lang="scss" scoped>
-
+.home {
+  height: 100%;
+  position: relative;
+  &--container {
+    overflow: auto;
+    overflow-x: hidden;
+    height: calc(100% - 450px);
+    position: relative;
+  }
+  .animated {
+    animation-duration: .5s;
+  }
+}
 </style>

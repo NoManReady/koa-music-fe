@@ -1,15 +1,16 @@
 import * as api from '@/api'
 import * as types from '../constant'
+const _musicLists = JSON.parse(localStorage.musiclists || '[]')
 const state = {
   popularLists: [],//流行音乐列表
   classicalLists: [],//古典音乐列表
   lightLists: [],//轻音乐列表
   radioLists: [],//电台音乐列表
-  listenLists: localStorage.musiclists ? JSON.parse(localStorage.musiclists) : [],//歌曲列表
-  audio: localStorage.musiclists ? JSON.parse(localStorage.musiclists)[0] : null,//当前播放音乐
-  audioUrl: '',//当前歌曲封面
+  listenLists: _musicLists,//歌曲列表
+  audio: _musicLists[0],//当前播放音乐
+  audioUrl: '',//当前歌曲链接
   lyric: '',//当前歌词
-  size: '',//当前歌曲大小
+  duration: '',//当前歌曲总时间
   playing: false, // 是否正在播放
 }
 
@@ -98,7 +99,7 @@ const actions = {
       .then(res => {
         const _tracks = res.result.tracks
         commit(types.PART_LOADING, false)
-        commit(types.GET_RADIO_LISTS, res.playlist.tracks)
+        commit(types.GET_RADIO_LISTS, _tracks)
         localStorage.radiomusics = JSON.stringify(_tracks.slice(0, 30))
       })
   },
@@ -110,42 +111,50 @@ const actions = {
   setAudioUrl({ commit }, url) {
     commit(types.SET_AUDIO_URL, url)
   },
-  //上一曲
-  setNextAudio({ commit }, index) {
-    commit(types.SET_PRE_AUDIO, index)
-  },
   //下一曲
-  setPreAudio({ commit }, index) {
+  setNextAudio({ commit }, index) {
     commit(types.SET_NEXT_AUDIO, index)
+  },
+  //上一曲
+  setPreAudio({ commit }, index) {
+    commit(types.SET_PRE_AUDIO, index)
   },
   //播放、暂停
   setPlaying({ commit }, status) {
     commit(types.TOGGLE_PLAYING, status)
   },
+  // 获取歌曲
+  getMusicMp3({ commit, dispatch }, id) {
+    dispatch('getMusicLyric', id)
+    api.getMusic(id)
+      .then(res => {
+        dispatch('setAudioUrl', res.data[0].url)
+      })
+  },
   //获取歌词
   getMusicLyric({ commit }, id) {
-    api.getLyric({ id })
+    api.getLyric(id)
       .then((res) => {
-        res.lrc ? commit(types.GET_MUSIC_LYRIC, res.lrc.lyric) : commit(types.GET_MUSIC_LYRIC, '')
+        commit(types.GET_MUSIC_LYRIC, res.lrc ? res.lrc.lyric : '')
       })
   },
   //设置歌曲总时间
-  setMusicTime({ commit }, size) {
-    commit(types.SET_MUSIC_TIME, size)
+  setMusicTime({ commit }, duration) {
+    commit(types.SET_MUSIC_TIME, duration)
   }
 }
 
 const getters = {
   listenLists: state => state.listenLists,
-  popularLists: state => state.popularLists.slice(0, 30),
-  radioLists: state => state.radioLists.slice(0, 30),
-  lightLists: state => state.lightLists.slice(0, 30),
-  classicalLists: state => state.classicalLists.slice(0, 30),
+  popularLists: state => state.popularLists,
+  radioLists: state => state.radioLists,
+  lightLists: state => state.lightLists,
+  classicalLists: state => state.classicalLists,
   audio: state => state.audio,
   audioUrl: state => state.audioUrl,
   playing: state => state.playing,
   lyric: state => state.lyric,
-  size: state => state.size
+  duration: state => state.duration
 }
 
 const mutations = {
@@ -196,8 +205,8 @@ const mutations = {
   [types.GET_MUSIC_LYRIC](state, lyric) {
     state.lyric = lyric
   },
-  [types.SET_MUSIC_TIME](state, lyric) {
-    state.size = lyric
+  [types.SET_MUSIC_TIME](state, duration) {
+    state.duration = duration
   }
 }
 

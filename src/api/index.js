@@ -6,11 +6,11 @@ export const getMusics = (id) => {
 }
 // 获取歌词
 export const getLyric = (mid) => {
-  return axios.get(`/lyric?id=${id}`)
+  return axios.get(`/lyric?id=${mid}`)
 }
 // 获取音乐
 export const getMusic = (mid) => {
-  return axios.get(`/music?id=${id}`)
+  return axios.get(`/music?id=${mid}`)
 }
 // 搜索歌曲
 export const getSearch = (keywords) => {

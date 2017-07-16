@@ -2,13 +2,16 @@ import * as types from '../constant'
 const state = {
   header: true,
   loading: false,
-  playbar: true,
+  playbar: false,
   listenListStatus: false,
   partLoading: false
 }
 const actions = {
   setLoading({ commit }, loading = false) {
     commit(types.APP_LOADING, loading)
+  },
+  setPartLoading({ commit }, loading = false) {
+    commit(types.PART_LOADING, loading)
   },
   setHeader({ commit }, header = false) {
     commit(types.APP_HEADER, header)

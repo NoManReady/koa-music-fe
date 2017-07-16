@@ -38,14 +38,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/_variable.scss';
 .header {
-  height: 100px;
-  line-height: 100px;
+  flex: 0 0 100px;
   text-align: center;
-  background: #28224e;
+  background: darken($primary, 30%);
   display: flex;
   justify-content: space-between;
-  color: #746ca8;
+  align-items: center;
+  color: $primary;
   font-size: 30px;
   &--icon {
     flex: 0.5;
@@ -62,9 +63,9 @@ export default {
       cursor: pointer;
       a {
         display: block;
-        color: #746ca8;
+        color: $primary;
         &.active {
-          color: #eb234a;
+          color: $active;
         }
       }
     }

@@ -75,17 +75,13 @@ export default {
     },
     onTap(url) {
       if (url) {
-        window.open('_blank', url)
+        // window.open('_blank', url)
       }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.banner {
-  background: rgba(8, 5, 58, .9);
-}
-
 .banner-slide {
   perspective: 1000px;
   perspective-origin: 10% 10%;

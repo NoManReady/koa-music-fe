@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Header from '@/components/Header'
 import Playbar from '@/components/Playbar'
 import Loading from '@/components/Loading'
@@ -22,29 +22,44 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['loading', 'playbar', 'header'])
+    ...mapGetters(['loading', 'playbar', 'header', 'audio'])
   },
   components: {
     'app-header': Header,
     'app-playbar': Playbar,
     'app-loading': Loading
+  },
+  mounted() {
+    console.log('app')
+    // 初始化有音乐则播放
+    if (this.audio) {
+      this.setPlaybar(true)
+      this.$nextTick(() => {
+        this.getMusicMp3(this.audio.id)
+      })
+    }
+  },
+  methods: {
+    ...mapActions(['setPlaybar', 'getMusicMp3'])
   }
 }
 </script>
 
 <style lang="scss">
 @import './scss/rippler';
+html,
+body,
+#app {
+  height: 100%;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
+  background: rgba(8, 5, 58, .9);
   a {
     text-decoration: none;
     &:focus {
@@ -53,7 +68,8 @@ export default {
   }
   .container {
     position: relative;
-    flex: 1
+    flex: 1;
+    overflow: hidden;
   }
 }
 </style>

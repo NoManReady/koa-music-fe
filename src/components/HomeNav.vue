@@ -43,7 +43,8 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 100px;
+  justify-content: center;
+  height: 120px;
   text-align: center;
   background: darken($primary, 35%);
   color: $primary;
@@ -59,7 +60,7 @@ export default {
         color: #fff;
       }
     }
-    [class^=icon] {
+    i {
       font-size: 46px;
       color: $active;
     }
