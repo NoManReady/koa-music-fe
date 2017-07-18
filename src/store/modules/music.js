@@ -12,9 +12,13 @@ const state = {
   lyric: '',//当前歌词
   duration: '',//当前歌曲总时间
   playing: false, // 是否正在播放
+  count: 0
 }
 
 const actions = {
+  setCount({ commit }) {
+    commit('test')
+  },
   //添加到试听列表
   addListenLists({ commit }, music) {
     commit(types.ADD_LISTEN_LISTS, music)
@@ -207,6 +211,9 @@ const mutations = {
   },
   [types.SET_MUSIC_TIME](state, duration) {
     state.duration = duration
+  },
+  test(state) {
+    state.count++
   }
 }
 

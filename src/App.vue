@@ -31,6 +31,7 @@ export default {
   },
   mounted() {
     console.log('app')
+    this.setCount()
     // 初始化有音乐则播放
     if (this.audio) {
       this.setPlaybar(true)
@@ -40,7 +41,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setPlaybar', 'getMusicMp3'])
+    ...mapActions(['setPlaybar', 'getMusicMp3', 'setCount'])
   }
 }
 </script>

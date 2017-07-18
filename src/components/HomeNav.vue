@@ -24,6 +24,12 @@
         <span>电台</span>
       </router-link>
     </div>
+    <div class="nav-item">
+      <router-link to="swing">
+        <i class="icon-swing"></i>
+        <span>音律</span>
+      </router-link>
+    </div>
   </div>
 </template>
 

@@ -11,7 +11,7 @@ function resolve(dir) {
 
 module.exports = {
   entry: {
-    app: './src/main.js',
+    app: ['babel-polyfill', './src/main.js'],
     vendor: ['vue', 'vuex', 'axios', 'vue-router']
   },
   output: {

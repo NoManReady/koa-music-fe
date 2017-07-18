@@ -4,9 +4,13 @@ const state = {
   loading: false,
   playbar: false,
   listenListStatus: false,
-  partLoading: false
+  partLoading: false,
+  count: 0
 }
 const actions = {
+  setCount({ commit }) {
+    commit('test')
+  },
   setLoading({ commit }, loading = false) {
     commit(types.APP_LOADING, loading)
   },
@@ -38,6 +42,9 @@ const mutations = {
   },
   [types.PART_LOADING](state, status) {
     state.partLoading = status
+  },
+  test(state) {
+    state.count++
   }
 }
 const getters = {

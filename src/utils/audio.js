@@ -1,11 +1,16 @@
+import axios from 'axios'
+import config from '@/config'
+let _host = config[process.env.NODE_ENV].service
 class Music {
-  constructor() {
+  constructor(list = [], opts = {}) {
     this.canvas = Music._canvas
     this.ctx = this.canvas.getContext('2d')
     this.size = 128
     this.r = 40
-    this.type = 1
-
+    this.drawType = 1
+    this.onEnds = []
+    this.list = list
+    this.begin = false
     this.xhr = new XMLHttpRequest()
 
     // 初始化audiocontext
@@ -35,7 +40,7 @@ class Music {
     let _canvasContainer = document.querySelector('.canves-container')
     this.canvas.width = _canvasContainer.clientWidth
     this.canvas.height = _canvasContainer.clientHeight
-    // this.dots = this._dotedHandler()
+    this.dots = this._dotedHandler()
   }
   // 切换音乐状态
   _toggleMusic() {
@@ -53,19 +58,45 @@ class Music {
   _stop() {
     this.ac.suspend()
   }
+  // 播放完成
+  _onEnd() {
+    this.onEnds.forEach(end => {
+      end()
+    })
+    this._next()
+  }
+  // 上一首
+  _prev() {
+    let _index = this.list.findIndex(lis => {
+      return lis.id === this.url
+    })
+    let _urlIndex = _index === 0 ? this.list.length - 1 : --_index
+    this._loadMusicByUrl(this.list[_urlIndex].id)
+  }
+  // 下一首
+  _next() {
+    let _index = this.list.findIndex(lis => {
+      return lis.id === this.url
+    })
+    let _urlIndex = _index === this.list.length - 1 ? 0 : ++_index
+    this._loadMusicByUrl(this.list[_urlIndex].id)
+  }
+  // 加载音乐
+  _load(list) {
+    this.list = list
+  }
   // 加载音乐
   _loadMusicByUrl(url) {
     if (!url) {
       return
     }
+    this.url = url
     this.xhr.abort()
-    this.bufferSource = this.ac.createBufferSource()
     // 停止原先播放
     if (this.bufferSource) {
       this.bufferSource.stop(0)
-      this.bufferSource = null
     }
-    this.xhr.open('get', encodeURIComponent(url), true)
+    this.xhr.open('get', `${_host}/api/canvas/${url}`, true)
     this.xhr.responseType = 'arraybuffer'
     this.xhr.onload = () => {
       this._analyerSource(this.xhr.response)
@@ -75,6 +106,8 @@ class Music {
   // 分析音乐资源(播放设置节点)
   _analyerSource(source) {
     this.ac.decodeAudioData(source, (buffer) => {
+      this.begin = true
+      this.bufferSource = this.ac.createBufferSource()
       this.bufferSource.buffer = buffer
       // 资源链接并播放
       this.bufferSource.connect(this.filter)
@@ -85,8 +118,8 @@ class Music {
       // 在曲子快要结束时，淡出之
       this.voiceNode.gain.linearRampToValueAtTime(1, this.ac.currentTime + this.bufferSource.buffer.duration - Music.FADE_TIME)
       this.voiceNode.gain.linearRampToValueAtTime(0, this.ac.currentTime + this.bufferSource.buffer.duration)
-      this.bufferSource.onended = function () {
-
+      this.bufferSource.onended = () => {
+        this._onEnd()
       }
       this._analyserData()
     }, error => {
@@ -99,10 +132,13 @@ class Music {
     const _round = () => {
       // 填充_frequencyBinCount数据
       this.analyerNode.getByteFrequencyData(_frequencyBinCount)
-      this._timer = setTimeout(this._round.bind(this), 1000 / 60)
+      this._timer = setTimeout(_round.bind(this), 1000 / 60)
+      if (!this.canvas) {
+        return
+      }
       this._draw(_frequencyBinCount)
     }
-    window.requestAnimationFrame(this._round.bind(this))
+    window.requestAnimationFrame(_round.bind(this))
   }
   // 初始化圆点
   _dotedHandler() {
@@ -149,7 +185,7 @@ class Music {
     for (let i = 0; i < this.size; i++) {
       this.ctx.beginPath()
       let h = arr[i] / 256 * this.canvas.height,
-        w = canvas.width / this.size,
+        w = this.canvas.width / this.size,
         line
       if (this.drawType == 1) {
         line = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height)
@@ -171,7 +207,7 @@ class Music {
     }
   }
   static get _canvas() {
-    return document.getElementById('#canvas')
+    return document.getElementById('canvas')
   }
   static get _ac() {
     window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext
@@ -230,3 +266,6 @@ class BufferLoader {
       this.loadBuffer(this.urlList[i], i)
   }
 }
+
+
+export default Music

@@ -3,7 +3,9 @@
     <s-banner :images="banners" v-if="banners.length"></s-banner>
     <s-home-nav></s-home-nav>
     <transition enter-active-class="lightSpeedIn" leave-active-class="lightSpeedOut" mode="out-in">
-      <router-view class="home--container animated"></router-view>
+      <keep-alive>
+        <router-view class="home--container animated"></router-view>
+      </keep-alive>
     </transition>
   </div>
 </template>

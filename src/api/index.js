@@ -25,3 +25,8 @@ export const getRank = (type) => {
 export const getBanner = () => {
   return axios.get('/banner')
 }
+
+// 获取本地歌曲
+export const getCanvasList = () => {
+  return axios.get('/canvasList')
+}

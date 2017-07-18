@@ -28,7 +28,7 @@
     </div>
     <audio preload ref="audio" :src="audioUrl" @ended="_next()"></audio>
     <transition enter-active-class="slideInRight" leave-active-class="slideOutRight">
-      <v-listen-list v-show="listenListStatus" class="animated"></v-listen-list>
+      <s-listen-list v-show="listenListStatus" class="animated"></s-listen-list>
     </transition>
   </div>
 </template>
@@ -42,7 +42,7 @@ import * as api from '@/api'
 
 export default {
   components: {
-    'v-listen-list': listenList
+    's-listen-list': listenList
   },
   data() {
     return {
